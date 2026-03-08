@@ -1,0 +1,41 @@
+app:
+  name: idp-app
+  replicas: 2
+
+image:
+  repository: nginx
+  tag: "1.25"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  hosts:
+    - host: demo.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "200m"
+    memory: "256Mi"
+
+serviceAccount:
+  create: true
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  cpu: 80
+
+namespaces:
+  - platform
+  - development
